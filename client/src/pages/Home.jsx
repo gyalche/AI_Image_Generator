@@ -5,8 +5,30 @@ const Home = () => {
   const [allPosts, setAllPosts] = useState(null);
   const [searchText, setSearchText] = useState('');
 
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('http://localhost:8080/api/v1/post/getPost', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (res.data.ok) {
+          const result = await res.json();
+          setAllPosts(result.data.reverse());
+        }
+      } catch (error) {
+        console.log(error);
+        alert(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, [allPosts]);
+
   const RenderCards = ({ data, title }) => {
-    if (data.length > 0) {
+    if (data) {
       return data.map((post) => <Card key={post._id} {...post} />);
     }
     return (
@@ -15,6 +37,7 @@ const Home = () => {
       </h2>
     );
   };
+
   return (
     <section className="max-w-7xl mx-auto">
       <div>
@@ -47,7 +70,7 @@ const Home = () => {
               {searchText ? (
                 <RenderCards data={[]} title="No search results found" />
               ) : (
-                <RenderCards data={[]} title="No posts found" />
+                <RenderCards data={allPosts} title="No posts found" />
               )}
             </div>
           </>
