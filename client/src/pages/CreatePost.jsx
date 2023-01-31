@@ -17,10 +17,15 @@ const CreatePost = () => {
   const handleSubmit = () => {};
 
   //form handle change;
-  const handleChange = (e) => {};
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   //suprise me;
-  const handleSupriseMe = () => {};
+  const handleSupriseMe = () => {
+    const randomPrompt = getRandomPrompt(form.prompt);
+    setForm({ ...form, prompt: randomPrompt });
+  };
 
   //generate image;
   const generateImage = () => {};
@@ -50,7 +55,7 @@ const CreatePost = () => {
               labelName="Prompt"
               type="text"
               name="prompt"
-              placeholder="prompt"
+              placeholder={form.prompt}
               value={form.prompt}
               onChange={handleChange}
               isSupriseMe
